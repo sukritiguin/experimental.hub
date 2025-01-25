@@ -1,6 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import { userRouter } from './routes/user.js';
 import fastifyPostgres from '@fastify/postgres';
+import {userRoutes} from './routes/user';
+import sequelize from './sequelize';
 
 const fastify: FastifyInstance = Fastify({
   logger: true
@@ -10,10 +11,15 @@ fastify.register(fastifyPostgres, {
   connectionString: 'postgresql://postgres:admin@localhost:5432/fastify'
 });
 
-fastify.register(userRouter, { prefix: '/users' });
+fastify.register(userRoutes, { prefix: '/api/users' });
+
 
 const start = async () => {
   try {
+    // Sync database
+    await sequelize.sync({ alter: true });
+    console.log('Database synced successfully');
+
     await fastify.listen({ port: 3000 });
     const address = fastify.server.address();
     fastify.log.info(`Server is now listening on ${address}`);
@@ -24,5 +30,3 @@ const start = async () => {
 };
 
 start();
-
-export default fastify;

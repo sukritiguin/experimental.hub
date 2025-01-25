@@ -1,12 +1,10 @@
-export interface User {
+export interface UserAttributes {
   id?: number;
-  username: string;
+  name: string;
   email: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
-
-export interface UserCreateInput {
+  password: string;
   username: string;
-  email: string;
+  dateOfBirth: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

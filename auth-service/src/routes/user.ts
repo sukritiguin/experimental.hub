@@ -1,38 +1,36 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { userRegisterSchema } from '../schemas/userSchema.js';
-import { createUser } from '../controllers/createUser.js';
-import { UserCreateInput } from '../types/user';
+import { User } from '../models/User';
+import { UserAttributes } from '../types/user';
 
-interface ParamsWithId {
-  id: string;
+interface RouteOptions {
+  prefix?: string;
 }
 
-export async function userRouter(fastify: FastifyInstance, options: object) {
-  fastify.get('/', async function (request: FastifyRequest, reply: FastifyReply) {
-    reply.send({ hello: 'world' });
+export async function userRoutes(fastify: FastifyInstance, opts: RouteOptions) {
+  fastify.get('/', async (request: FastifyRequest, reply: FastifyReply) => {
+    const users = await User.findAll();
+    reply.send({
+      message: 'Success',
+      data: users
+    });
   });
 
-  fastify.get('/:id', async function (
-    request: FastifyRequest<{ Params: ParamsWithId }>,
-    reply: FastifyReply
-  ) {
-    const userData: UserCreateInput = {
-      username: 'sukriti',
-      email: `sukriti@${request.params.id}`
-    };
-    const user = await createUser(fastify, userData);
-    reply.send(user);
+  fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
+    const { name, username, email, password, dateOfBirth } = request.body as UserAttributes;
+    const user = await User.create({ 
+      name: name,
+      username: username,
+      email: email,
+      password: password,
+      dateOfBirth: new Date(dateOfBirth)
+     });
+    reply.send({
+      username: user.username,
+      email: user.email,
+      id: user.id,
+      name: user.name
+    });
   });
-
-  fastify.post(
-    '/',
-    { schema: userRegisterSchema },
-    async function (
-      request: FastifyRequest<{ Body: UserCreateInput }>,
-      reply: FastifyReply
-    ) {
-      const user = await createUser(fastify, request.body);
-      reply.send(user);
-    }
-  );
 }
+
+
