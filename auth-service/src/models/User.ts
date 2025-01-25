@@ -77,6 +77,20 @@ User.init(
     },
     {
         sequelize,
-        modelName: 'User'
+        tableName: 'users',
+        modelName: 'User',
+        validate: {
+            // Ensure username and email are different
+            usernameNotEmail() {
+                if (this.username === this.email) {
+                    throw new Error('Username cannot be the same as email');
+                }
+                return true;
+            },
+            // Check age is valid
+            
+            // Ensure password doesn't contain username or email
+            
+        }
     }
 );
