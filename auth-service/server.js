@@ -1,14 +1,14 @@
 import Fastify  from "fastify";
 import userRouter from "./src/routes/user.js";
-import fastifyMysql from "@fastify/mysql";
+import fastifyPostgres from "@fastify/postgres";
 
 const fastify = Fastify({
     logger: true
-  })
+})
 
-  fastify.register(fastifyMysql, {
-    connectionString: 'mysql://root@localhost:3306/fastify', // Replace with your details
-  });
+fastify.register(fastifyPostgres, {
+connectionString: 'postgresql://postgres:admin@localhost:5432/fastify', // Replace with your details
+});
 
 fastify.register(userRouter, { prefix: '/users' })
 
@@ -32,3 +32,5 @@ fastify.listen({ port: PORT }, function (err, address) {
     }
 // Server is now listening on ${address}
 })
+
+export default fastify;
