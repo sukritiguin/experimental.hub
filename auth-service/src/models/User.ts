@@ -27,20 +27,52 @@ User.init(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                isEmail: {
+                    msg: "Must be a valid email address"
+                }
+            }
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: {
+                    args: [6, 100],
+                    msg: "Password must be at least 6 characters long"
+                },
+                isStrongPassword(value: string) {
+                    if (!/[A-Z]/.test(value)) {
+                        throw new Error('Password must contain at least one uppercase letter');
+                    }
+                    if (!/[a-z]/.test(value)) {
+                        throw new Error('Password must contain at least one lowercase letter');
+                    }
+                    if (!/[0-9]/.test(value)) {
+                        throw new Error('Password must contain at least one number');
+                    }
+                }
+            }
         },
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                len: {
+                    args: [4, 30],
+                    msg: "Username must be between 4 and 30 characters"
+                },
+                is: {
+                    args: /^[a-zA-Z0-9_]+$/,
+                    msg: "Username can only contain letters, numbers, and underscores"
+                }
+            }
         },
         dateOfBirth: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
         }
     },
     {

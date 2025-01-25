@@ -16,21 +16,33 @@ export async function userRoutes(fastify: FastifyInstance, opts: RouteOptions) {
   });
 
   fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
-    const { name, username, email, password, dateOfBirth } = request.body as UserAttributes;
-    const user = await User.create({ 
-      name: name,
-      username: username,
-      email: email,
-      password: password,
-      dateOfBirth: new Date(dateOfBirth)
-     });
-    reply.send({
-      username: user.username,
-      email: user.email,
-      id: user.id,
-      name: user.name
-    });
+    try {
+      const { username, email, password, name, dateOfBirth } = request.body as any;
+      const user = await User.create({
+        username,
+        email,
+        name,
+        password: password,
+        dateOfBirth: new Date(dateOfBirth)
+      });
+      reply.send({
+        username: user.username,
+        email: user.email,
+        id: user.id,
+        name: user.name
+      });
+    } catch (error: any) {
+      if (error.name === 'SequelizeValidationError') {
+        reply.status(400).send({
+          error: 'Validation Error',
+          message: error.errors[0].message
+        });
+      } else {
+        reply.status(500).send({
+          error: 'Internal Server Error',
+          message: error.message
+        });
+      }
+    }
   });
 }
-
-
