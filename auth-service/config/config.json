@@ -1,0 +1,35 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "fastify",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "migrations": {
+      "path": "./migrations"
+    }
+  },
+  "test": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "fastify_test",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "migrations": {
+      "path": "./migrations"
+    }
+  },
+  "production": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "fastify_production",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "migrations": {
+      "path": "./migrations"
+    }
+  }
+}

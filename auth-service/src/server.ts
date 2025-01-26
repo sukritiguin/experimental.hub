@@ -2,6 +2,9 @@ import Fastify, { FastifyInstance } from 'fastify';
 import fastifyPostgres from '@fastify/postgres';
 import {userRoutes} from './routes/user';
 import sequelize from './sequelize';
+import { User } from './models/User';
+import Profile from './models/Profile';
+import { initAssociations } from './models/associations';
 
 const fastify: FastifyInstance = Fastify({
   logger: true
@@ -13,9 +16,11 @@ fastify.register(fastifyPostgres, {
 
 fastify.register(userRoutes, { prefix: '/api/users' });
 
-
 const start = async () => {
   try {
+    // Initialize associations after models are loaded
+    initAssociations(sequelize);
+    
     // Sync database
     await sequelize.sync({ alter: true });
     console.log('Database synced successfully');

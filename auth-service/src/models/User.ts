@@ -59,6 +59,7 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+            primaryKey: true,
             validate: {
                 len: {
                     args: [4, 30],
@@ -94,3 +95,5 @@ User.init(
         }
     }
 );
+
+export default User;
