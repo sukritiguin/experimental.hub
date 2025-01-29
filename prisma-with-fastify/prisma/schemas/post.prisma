@@ -1,10 +1,10 @@
 model Post {
   id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
   title      String
-  published  Boolean    @default(false)
-  author     User       @relation(fields: [authorId], references: [id])
   authorId   Int
-  categories Category[]
+  createdAt  DateTime   @default(now())
+  published  Boolean    @default(false)
+  updatedAt  DateTime   @updatedAt
+  author     User       @relation(fields: [authorId], references: [id])
+  categories Category[] @relation("CategoryToPost")
 }
