@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { PrismaClient } from '@prisma/client';
+import userRoutes from './routes/user.route';
 
 const prisma = new PrismaClient();
 const fastify = Fastify({
@@ -11,14 +12,18 @@ fastify.get('/', async (request, reply) => {
   return users;
 });
 
+fastify.register(userRoutes, { prefix: '/users' });
+
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000 });
-    console.log('Server is running on http://localhost:3000');
+    await fastify.listen({ port: 4000 });
+    console.log('Server is running on http://localhost:4000');
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
   }
 };
+
+export {prisma}
 
 start();
